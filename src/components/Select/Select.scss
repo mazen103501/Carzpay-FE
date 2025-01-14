@@ -1,0 +1,34 @@
+.select-container {
+  position: relative;
+
+  select {
+    width: 100%;
+    height: 38px;
+    font-size: 12px;
+    font-weight: normal;
+    padding: 10px 12px;
+    color: #7e7e7e;
+    background-color: #f9fbff;
+    border: 1px solid white;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+
+    &:focus {
+      border-color: #057aff;
+    }
+
+    option {
+      background-color: #f9fbff;
+      color: #7e7e7e;
+      padding: 10px;
+      font-size: 12px;
+      border-radius: 10px; /* Change border-radius */
+      background-color: #f9fbff; /* Change background color */
+
+      &:hover {
+        background-color: #b2ebf2; /* Change hover background color */
+      }
+    }
+  }
+}

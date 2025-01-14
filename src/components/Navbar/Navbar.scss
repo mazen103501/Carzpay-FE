@@ -1,0 +1,77 @@
+.navbar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 288px;
+  background-color: white;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding: 26.5px 20px 78px;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+  .logo {
+    display: flex;
+    justify-content: center;
+    img {
+      // width: 100%;
+      height: fit-content;
+    }
+  }
+}
+
+.navbar nav {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 28px;
+    flex-grow: 1;
+    li {
+      margin: 10px 0;
+      color: #324054;
+      a {
+        text-decoration: none;
+        display: flex;
+        padding: 12px;
+        transition: 0.2s;
+        svg {
+          margin-right: 16px;
+        }
+        &:hover {
+          @extend %shared-hover-active-styles;
+        }
+        &.active {
+          @extend %shared-hover-active-styles;
+        }
+      }
+    }
+  }
+}
+
+.navbar button {
+  background-color: theme("colors.primary");
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  width: 200px;
+  border-radius: 6px;
+  color: white;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  img {
+    margin-right: 8px;
+  }
+}
+
+%shared-hover-active-styles {
+  background-color: rgba(5, 122, 255, 0.2);
+  color: theme("colors.primary");
+  border-radius: 8px;
+  svg path {
+    fill: theme("colors.primary");
+  }
+}

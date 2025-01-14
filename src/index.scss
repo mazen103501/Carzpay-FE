@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  background: #f9fbff;
+}
+
+.page-header {
+  @apply text-black font-bold text-4xl tracking-tight mb-9;
+}
+
+.box-container {
+  @apply bg-white shadow-box rounded-box;
+}
+
+.box-container-header {
+  border-color: rgba(217, 217, 217, 0.5);
+  @apply pt-6 pl-8 pb-4 border-b-[1px];
+}
+
+.nunito-font {
+  @apply font-nunito;
+}

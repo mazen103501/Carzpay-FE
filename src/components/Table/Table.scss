@@ -1,0 +1,13 @@
+table {
+  th {
+    @apply font-normal pb-3 text-sm;
+  }
+  tbody {
+    tr {
+      @apply text-sm text-center text-[#292D32];
+      &:not(:last-child) {
+        @apply border-b border-[#E5E5E5];
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.page-container {
+  margin-left: 288px;
+  @apply px-12 py-6;
+}
+
+.status {
+  @apply rounded-[10px] max-w-[110px];
+  &.approved {
+    color: rgba(0, 182, 155, 1);
+    background: rgba(0, 182, 155, 0.2);
+  }
+  &.rejected {
+    color: rgba(239, 56, 38, 1);
+    background: rgba(239, 56, 38, 0.2);
+  }
+  &.pending {
+    color: rgba(255, 193, 7, 1);
+    background: rgba(255, 193, 7, 0.2);
+  }
+}

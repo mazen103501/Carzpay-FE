@@ -59,7 +59,7 @@ function Login() {
                   loading && "loading-spinner"
                 }`}
                 type="submit"
-                disabled={loading}
+                disabled={loading || !email || !password}
               >
                 Sign In
               </button>

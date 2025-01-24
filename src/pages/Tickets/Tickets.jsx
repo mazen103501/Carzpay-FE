@@ -1,15 +1,18 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../components/Input/Input";
 import Select from "../../components/Select/Select";
 import Table from "../../components/Table/Table";
 import InfoIcon from "../../../public/info.svg";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../components/Loading/Loading";
+import { toast } from "react-toastify";
+import { post } from "../../utils/api";
+import { statusEnum } from "../../utils/const";
 
 const bankOptions = [
   { value: "", label: "Bank" },
-  { value: "option1", label: "Option 1" },
-  { value: "option2", label: "Option 2" },
-  { value: "option3", label: "Option 3" },
+  { value: 1, label: "Capital Bank" },
+  { value: 2, label: "Blink" },
 ];
 
 const statusOptions = [
@@ -20,113 +23,94 @@ const statusOptions = [
 ];
 
 const tableHeaders = [
-  "Code",
-  "Name",
-  "Phone Number",
-  "Approved Amount",
-  "Request Data",
-  "Status",
-  "Actions",
+  { label: "Code", key: "code" },
+  { label: "Name", key: "name" },
+  { label: "Phone Number", key: "phoneNumber" },
+  { label: "Approved Amount", key: "approvedAmount" },
+  { label: "Request Date", key: "requestDate" },
+  { label: "Status", key: "status" },
+  { label: "Actions", key: "actions" },
 ];
 
 function Tickets() {
   const navigate = useNavigate();
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [bank, setBank] = useState("");
+  const [status, setStatus] = useState("");
+  const [tableData, setTableData] = useState([]);
+  const [tablePagination, setTablePagination] = useState({
+    pageSize: 15,
+    totalPages: 3,
+  });
+  const [loading, setLoading] = useState(false);
+  const [isInitialMount, setIsInitialMount] = useState(false);
 
-  function phoneNumberChange(e) {
-    console.log(e.target.value);
+  useEffect(() => {
+    if (isInitialMount) {
+      const timer = setTimeout(() => {
+        fetchPaginatedData(1);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [phoneNumber]);
+
+  useEffect(() => {
+    if (isInitialMount) {
+      fetchPaginatedData(1);
+    }
+  }, [bank, status]);
+
+  useEffect(() => {
+    fetchPaginatedData(1);
+    setIsInitialMount(true);
+  }, []);
+
+  function fetchPaginatedData(pageNumber) {
+    fetchData(phoneNumber, bank, status, pageNumber);
   }
 
-  function handleSelectChange(e) {
-    console.log(e.target.value);
-  }
+  const fetchData = async (phoneNumber, bank, status, pageNumber) => {
+    setLoading(true);
 
-  const tableData = [
-    {
-      code: { data: "001", for: "Code" },
-      name: { data: "John Doe", for: "Name" },
-      phoneNumber: { data: "123-456-7890", for: "Phone Number" },
-      approvedAmount: { data: "$1,000", for: "Approved Amount" },
-      requestData: { data: "2023-10-01", for: "Request Data" },
-      status: {
-        data: "Approved",
-        for: "Status",
-        styles: "status approved",
-      },
-      actions: {
-        icon: InfoIcon,
-        for: "Actions",
-        onClick: () => navigate("/tickets/32"),
-      },
-    },
-    {
-      code: { data: "002", for: "Code" },
-      name: { data: "Jane Smith", for: "Name" },
-      phoneNumber: { data: "987-654-3210", for: "Phone Number" },
-      approvedAmount: { data: "$2,000", for: "Approved Amount" },
-      requestData: { data: "2023-10-02", for: "Request Data" },
-      status: {
-        data: "Pending",
-        for: "Status",
-        styles: "status pending",
-      },
-      actions: {
-        icon: InfoIcon,
-        for: "Actions",
-        onClick: () => navigate("/tickets/32"),
-      },
-    },
-    {
-      code: { data: "003", for: "Code" },
-      name: { data: "Alice Johnson", for: "Name" },
-      phoneNumber: { data: "555-123-4567", for: "Phone Number" },
-      approvedAmount: { data: "$1,500", for: "Approved Amount" },
-      requestData: { data: "2023-10-03", for: "Request Data" },
-      status: {
-        data: "Rejected",
-        for: "Status",
-        styles: "status rejected",
-      },
-      actions: {
-        icon: InfoIcon,
-        for: "Actions",
-        onClick: () => navigate("/tickets/32"),
-      },
-    },
-    {
-      code: { data: "004", for: "Code" },
-      name: { data: "Bob Brown", for: "Name" },
-      phoneNumber: { data: "444-555-6666", for: "Phone Number" },
-      approvedAmount: { data: "$3,000", for: "Approved Amount" },
-      requestData: { data: "2023-10-04", for: "Request Data" },
-      status: {
-        data: "Approved",
-        for: "Status",
-        styles: "status approved",
-      },
-      actions: {
-        icon: InfoIcon,
-        for: "Actions",
-        onClick: () => navigate("/tickets/32"),
-      },
-    },
-    {
-      code: { data: "005", for: "Code" },
-      name: { data: "Charlie Davis", for: "Name" },
-      phoneNumber: { data: "333-444-5555", for: "Phone Number" },
-      approvedAmount: { data: "$2,500", for: "Approved Amount" },
-      requestData: { data: "2023-10-05", for: "Request Data" },
-      status: {
-        data: "Pending",
-        for: "Status",
-        styles: "status pending",
-      },
-      actions: {
-        icon: InfoIcon,
-        for: "Actions",
-        onClick: () => navigate("/tickets/32"),
-      },
-    },
-  ];
+    const payload = { pageNumber };
+    if (phoneNumber) payload.phoneNumber = phoneNumber;
+    if (bank) payload.bank = parseInt(bank);
+    if (status) payload.status = status;
+    console.log(payload);
+    try {
+      const res = await post("/ticket/search", payload);
+      if (res.status.isSuccess) {
+        const pagination = res.pagination;
+        const tableData = res.data.tickets.map((item) => {
+          item.name = item.user.name;
+          item.phoneNumber = item.user.phoneNumber;
+          item.approvedAmount = item.creditAmount;
+          item.requestDate = item.createdAt || "01-01-2025";
+          item.status = {
+            data: statusEnum[item.status],
+            styles: "status w-fit whitespace-nowrap !max-w-none approved",
+          };
+          item.actions = {
+            icon: InfoIcon,
+            onClick: () => navigate(`/tickets/${item.id}`),
+          };
+          delete item.user;
+          return item;
+        });
+        setTablePagination({
+          pageSize: pagination.pageSize || 15,
+          totalPages: pagination.totalPages || 1,
+        });
+        setTableData(tableData);
+      } else {
+        toast.error(res.status.message || "Something Went Wrong");
+      }
+    } catch (error) {
+      toast.error(`Error fetching data: ${error.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="page-container">
@@ -135,24 +119,36 @@ function Tickets() {
         <div className="mr-2 w-1/4">
           <Input
             placeholder="Phone Number"
-            onChange={(e) => phoneNumberChange(e)}
+            onChange={(e) => setPhoneNumber(e.target.value)}
           />
         </div>
         <div className="mr-2 w-1/4">
           <Select
             options={bankOptions}
-            onChange={(e) => handleSelectChange(e)}
+            onChange={(e) => setBank(e.target.value)}
           />
         </div>
         <div className="mr-2 w-1/4">
           <Select
             options={statusOptions}
-            onChange={(e) => handleSelectChange(e)}
+            onChange={(e) => setStatus(e.target.value)}
           />
         </div>
+        {loading && (
+          <div className="mr-4 w-6 flex items-center">
+            <div className="h-6 w-full">
+              <Loading></Loading>
+            </div>
+          </div>
+        )}
       </div>
-      <div className="box-container mt-8 py-5">
-        <Table headers={tableHeaders} data={tableData} />
+      <div className="box-container mt-8 py-5 overflow-auto">
+        <Table
+          headers={tableHeaders}
+          data={tableData}
+          pagination={tablePagination}
+          pageChangeFn={(e) => fetchPaginatedData(e)}
+        />
       </div>
     </div>
   );

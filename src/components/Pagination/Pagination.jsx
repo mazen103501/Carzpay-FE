@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import "./pagination.scss";
 
-const Pagination = ({ totalItems = 90, itemsPerPage = 6, onPageChange }) => {
+const Pagination = ({
+  totalItems = 90,
+  itemsPerPage = 6,
+  totalPagesNum,
+  onPageChange,
+}) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = totalPagesNum || Math.ceil(totalItems / itemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);

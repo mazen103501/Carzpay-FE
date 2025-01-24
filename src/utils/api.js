@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create an axios instance
 export const api = axios.create({
-  baseURL: "http://localhost:5678/api",
+  baseURL: "https://dashboard-api.carz-pay.com/api",
   headers: {
     "Content-Type": "application/json",
   },

@@ -1,47 +1,69 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Input from "../../../components/Input/Input";
 import Table from "../../../components/Table/Table";
-
-const tableHeaders = ["Amount", "Due Date", "Status"];
+import { get } from "../../../utils/api";
+import { toast } from "react-toastify";
+import {
+  paidEnum,
+  paymentsHeaders,
+  paymentsTableObj,
+} from "../../../utils/const";
+import Loading from "../../../components/Loading/Loading";
 
 function RepairShopDetails() {
-  const [activeButton, setActiveButton] = useState("Paid");
   const { shopId } = useParams();
+  const [shopDetails, setShopDetails] = useState({});
+  const [payments, setPayments] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [activeButton, setActiveButton] = useState(null);
 
-  const tableData = [
-    {
-      amount: { data: "001", for: "Amount" },
-      dueDate: { data: "Mazen taha", for: "Due Date" },
-      status: {
-        data: "Paid",
-        for: "Status",
-        styles: "rounded-[4.5px] max-w-[110px] status approved",
-      },
-    },
-    {
-      amount: { data: "002", for: "Amount" },
-      dueDate: { data: "Mazen taha 2", for: "Due Date" },
-      status: {
-        data: "Paid",
-        for: "Status",
-        styles: "rounded-[4.5px] max-w-[110px] status approved",
-      },
-    },
-    {
-      amount: { data: "003", for: "Amount" },
-      dueDate: { data: "Mazen taha 3", for: "Due Date" },
-      status: {
-        data: "Un Paid",
-        for: "Status",
-        styles: "rounded-[4.5px] max-w-[110px] status rejected",
-      },
-    },
-  ];
+  useEffect(() => {
+    fetchShopDetails();
+  }, []);
+
+  const fetchShopDetails = async () => {
+    setLoading(true);
+    try {
+      const res = await get(`/repair-shop/${shopId}`);
+      if (res.status.isSuccess) {
+        const data = {
+          ...res.data.repairShop,
+          area: res.data.repairShop.area.name,
+          city: res.data.repairShop.city.name,
+        };
+        const payments = data.payments.map((payment) => ({
+          ...payment,
+          status: paymentsTableObj[payment.status],
+          dueDate: "01-01-2025",
+        }));
+        delete data.payments;
+        setShopDetails(data);
+        setPayments(payments);
+      } else {
+        toast.error(res.status.message || "Something Went Wrong");
+      }
+    } catch (err) {
+      toast.error(`Error fetching data: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredPayments = payments.filter((payment) => {
+    if (activeButton === null) return true;
+    return payment.status.data === activeButton;
+  });
+
+  const loadingComponent = loading && (
+    <div className="mt-2 ml-3 w-7 h-7">
+      <Loading></Loading>
+    </div>
+  );
 
   return (
     <div className="page-container">
-      <h1 className="page-header">Repair Shop</h1>
+      <h1 className="page-header flex">Repair Shop {loadingComponent}</h1>
 
       <div className="box-container mt-7">
         <div className="box-container-header">
@@ -52,6 +74,8 @@ function RepairShopDetails() {
             <Input
               placeholder="Arabic Name"
               label="Arabic Name"
+              value={shopDetails.arabicName}
+              cssClasses="text-rtl text-left"
               disabled={true}
             ></Input>
           </div>
@@ -59,6 +83,7 @@ function RepairShopDetails() {
             <Input
               placeholder="English Name"
               label="English Name"
+              value={shopDetails.englishName}
               disabled={true}
             ></Input>
           </div>
@@ -66,6 +91,7 @@ function RepairShopDetails() {
             <Input
               placeholder="Phone Number"
               label="Phone Number"
+              value={shopDetails.phoneNumber}
               disabled={true}
             ></Input>
           </div>
@@ -73,15 +99,18 @@ function RepairShopDetails() {
             <Input
               placeholder="whatsapp Phone Number"
               label="whatsapp Phone Number"
+              value={shopDetails.whatsappPhoneNumber}
               disabled={true}
             ></Input>
           </div>
         </div>
         <div className="px-5 py-3 flex flex-wrap gap-5">
-          <div className="w-full min-w-[220px]">
+          <div className="w-full min-w-[220px] ">
             <Input
               placeholder="Arabic Description"
               label="Arabic Description"
+              value={shopDetails.arabicDescription}
+              cssClasses="text-rtl text-left"
               disabled={true}
             ></Input>
           </div>
@@ -89,21 +118,33 @@ function RepairShopDetails() {
             <Input
               placeholder="English Description"
               label="English Description"
+              value={shopDetails.englishDescription}
               disabled={true}
             ></Input>
           </div>
         </div>
         <div className="p-5 pt-3 flex flex-wrap gap-5">
           <div className="w-1/5 min-w-[220px]">
-            <Input placeholder="City" label="City" disabled={true}></Input>
+            <Input
+              placeholder="City"
+              label="City"
+              value={shopDetails.city}
+              disabled={true}
+            ></Input>
           </div>
           <div className="w-1/5 min-w-[220px]">
-            <Input placeholder="Area" label="Area" disabled={true}></Input>
+            <Input
+              placeholder="Area"
+              label="Area"
+              value={shopDetails.area}
+              disabled={true}
+            ></Input>
           </div>
           <div className="w-1/5 min-w-[220px]">
             <Input
               placeholder="Location"
               label="Lat/Long"
+              value={shopDetails.location}
               disabled={true}
             ></Input>
           </div>
@@ -118,29 +159,39 @@ function RepairShopDetails() {
           <div>
             <button
               className={`font-semibold  px-9 py-2 rounded-xl mr-4 ${
-                activeButton === "Paid"
+                activeButton === null
                   ? "text-white bg-primary"
                   : "text-primary bg-[#F1F1F1]"
               }`}
-              onClick={() => setActiveButton("Paid")}
+              onClick={() => setActiveButton(null)}
+            >
+              All
+            </button>
+            <button
+              className={`font-semibold  px-9 py-2 rounded-xl mr-4 ${
+                activeButton === paidEnum.paid
+                  ? "text-white bg-primary"
+                  : "text-primary bg-[#F1F1F1]"
+              }`}
+              onClick={() => setActiveButton(paidEnum.paid)}
             >
               Paid
             </button>
             <button
               className={`font-semibold  px-9 py-2 rounded-xl ${
-                activeButton === "Unpaid"
+                activeButton === paidEnum.unPaid
                   ? "text-white bg-primary"
                   : "text-primary bg-[#F1F1F1]"
               }`}
-              onClick={() => setActiveButton("Unpaid")}
+              onClick={() => setActiveButton(paidEnum.unPaid)}
             >
               Unpaid
             </button>
           </div>
           <div className="mt-8">
             <Table
-              headers={tableHeaders}
-              data={tableData}
+              headers={paymentsHeaders}
+              data={filteredPayments}
               hiddenPagination={true}
             ></Table>
           </div>

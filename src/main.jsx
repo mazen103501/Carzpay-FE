@@ -7,12 +7,10 @@ import { AuthProvider } from "./context/AuthContext.jsx";
 import { ToastContainer } from "react-toastify";
 
 createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <Router>
-      <AuthProvider>
-        <ToastContainer position="top-right" autoClose={5000} hideProgressBar />
-        <App />
-      </AuthProvider>
-    </Router>
-  </StrictMode>
+  <Router>
+    <AuthProvider>
+      <ToastContainer position="top-right" autoClose={5000} hideProgressBar />
+      <App />
+    </AuthProvider>
+  </Router>
 );

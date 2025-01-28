@@ -9,6 +9,7 @@ import TicketDetails from "./pages/Tickets/TicketDetails/TicketDetails";
 import RepairShopDetails from "./pages/RepairShops/RepairShopDetails/RepairShopDetails";
 import RepairShops from "./pages/RepairShops/RepairShops";
 import { AuthContext } from "./context/AuthContext";
+import Users from "./pages/Users/Users";
 
 function App() {
   const { authToken } = useContext(AuthContext);
@@ -24,6 +25,7 @@ function App() {
               <Navbar />
               <Routes>
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/users" element={<Users />} />
                 <Route path="/tickets" element={<Tickets />} />
                 <Route path="/tickets/:ticketId" element={<TicketDetails />} />
                 <Route path="/repair-shops" element={<RepairShops />} />

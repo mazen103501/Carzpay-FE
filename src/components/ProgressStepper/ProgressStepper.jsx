@@ -9,7 +9,7 @@ const stepsWithoutReject = [
   "Pending Installments",
   "Settled",
 ];
-function ProgressStepper({ steps, currentStep = "Approved" }) {
+function ProgressStepper({ steps, currentStep }) {
   const activeStep = stepsWithoutReject.indexOf(currentStep);
   return (
     <div className="progress-stepper">

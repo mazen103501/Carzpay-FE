@@ -10,6 +10,7 @@ import {
   paymentsTableObj,
 } from "../../../utils/const";
 import Loading from "../../../components/Loading/Loading";
+import { formatDateTime } from "../../../utils/date";
 
 function RepairShopDetails() {
   const { shopId } = useParams();
@@ -35,7 +36,7 @@ function RepairShopDetails() {
         const payments = data.payments.map((payment) => ({
           ...payment,
           status: paymentsTableObj[payment.status],
-          dueDate: "01-01-2025",
+          dueDate: formatDateTime(payment.payoutDate) || "01-01-2025",
         }));
         delete data.payments;
         setShopDetails(data);

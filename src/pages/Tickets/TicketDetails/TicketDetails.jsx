@@ -115,7 +115,7 @@ function TicketDetails() {
             <Input
               placeholder="Request Date"
               label="Request Date"
-              value={ticketDetails?.requestDate || "01-01-2025"}
+              value={formatDateTime(ticketDetails?.requestDate) || "01-01-2025"}
               disabled={true}
             ></Input>
           </div>

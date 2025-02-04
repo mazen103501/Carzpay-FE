@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { post } from "../../utils/api";
 import { statusEnum } from "../../utils/const";
 import { fetchLookupData } from "../../utils/fetchLookup";
+import { formatDateTime } from "../../utils/date";
 
 const bankFirstValue = { value: "", label: "Bank" };
 
@@ -81,7 +82,7 @@ function Tickets() {
           item.name = item.user.name;
           item.phoneNumber = item.user.phoneNumber;
           item.approvedAmount = item.creditAmount;
-          item.requestDate = item.createdAt || "01-01-2025";
+          item.requestDate = formatDateTime(item.requestDate) || "01-01-2025";
           item.status = {
             data: statusEnum[item.status],
             styles: "status w-fit whitespace-nowrap !max-w-none approved",

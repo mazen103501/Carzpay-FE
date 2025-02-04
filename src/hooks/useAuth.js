@@ -19,17 +19,18 @@ export const useAuth = () => {
 
   const login = async (email, password) => {
     try {
-      const res = await post("/login", { email, password });
+      const res = await post("/users/login", { email, password });
       console.log(res);
-      if (res.success) {
+      if (res.status.isSuccess) {
         setAuthToken(res.data.token);
+        localStorage.setItem(localStorageKey, res.data.token);
         navigate("/dashboard");
       } else {
-        toast.error(`${res.message}`);
+        toast.error(`${res.status.errors[0].message}`);
       }
     } catch (error) {
       console.log(error);
-      toast.error(`${error.response.data.message}`);
+      toast.error(`${error.status.message}`);
     }
   };
 

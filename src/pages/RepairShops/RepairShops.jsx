@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Input from "../../components/Input/Input";
 import Select from "../../components/Select/Select";
 import { useNavigate } from "react-router-dom";
@@ -6,8 +6,13 @@ import Table from "../../components/Table/Table";
 import InfoIcon from "../../../public/info.svg";
 import LocationIcon from "../../../public/location-sign.svg";
 import Loading from "../../components/Loading/Loading";
-import { post } from "../../utils/api";
+import { get, post } from "../../utils/api";
 import { toast } from "react-toastify";
+import { fetchLookupData } from "../../utils/fetchLookup";
+
+const cityFirstValue = { value: "", label: "City" };
+
+const areaFirstValue = { value: "", label: "Area" };
 
 const tableHeaders = [
   { label: "Name", key: "name" },
@@ -32,18 +37,8 @@ function RepairShops() {
   });
   const [loading, setLoading] = useState(false);
   const [isInitialMount, setIsInitialMount] = useState(false);
-  const [cityOptions, setCityOptions] = useState([
-    { value: "", label: "City" },
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-  ]);
-  const [areaOptions, setAreaOptions] = useState([
-    { value: "", label: "Area" },
-    { value: "option1", label: "Option 1" },
-    { value: "option2", label: "Option 2" },
-    { value: "option3", label: "Option 3" },
-  ]);
+  const [cityOptions, setCityOptions] = useState([cityFirstValue]);
+  const [areaOptions, setAreaOptions] = useState([areaFirstValue]);
 
   useEffect(() => {
     if (isInitialMount) {
@@ -61,9 +56,14 @@ function RepairShops() {
   }, [area, city]);
 
   useEffect(() => {
+    if (isInitialMount) {
+      cityOptionsChange();
+    }
+  }, [city]);
+
+  useEffect(() => {
     fetchPaginatedData(1);
     fetchCityOptions();
-    fetchAreaOptions();
     setIsInitialMount(true);
   }, []);
 
@@ -73,8 +73,12 @@ function RepairShops() {
     const payload = { pageNumber };
     if (name) payload.name = name;
     if (phoneNumber) payload.phoneNumber = phoneNumber;
-    if (area) payload.area = area;
-    if (city) payload.city = city;
+    if (area) payload.areaId = +area;
+    if (city) payload.cityId = +city;
+
+    if (!city && area) {
+      return;
+    }
 
     try {
       const res = await post("/repair-shop/search", payload);
@@ -115,29 +119,20 @@ function RepairShops() {
   }
 
   async function fetchCityOptions() {
-    const res = await post("/cities");
-    if (res.status.isSuccess) {
-      const options = res.data.map((item) => ({
-        value: item.id,
-        label: item.name,
-      }));
-      setCityOptions(options);
-    } else {
-      toast.error(res.status.message || "Something Went Wrong");
-    }
+    const data = await fetchLookupData("/cities", cityFirstValue, "cities");
+    setCityOptions(data);
   }
 
   async function fetchAreaOptions() {
-    const res = await post("/areas");
-    if (res.status.isSuccess) {
-      const options = res.data.map((item) => ({
-        value: item.id,
-        label: item.name,
-      }));
-      setAreaOptions(options);
-    } else {
-      toast.error(res.status.message || "Something Went Wrong");
-    }
+    const endpoint = `/areas/${city}`;
+    const data = await fetchLookupData(endpoint, areaFirstValue, "areas");
+    setAreaOptions(data);
+  }
+
+  function cityOptionsChange() {
+    setArea("");
+    setAreaOptions([{ value: "", label: "Area" }]);
+    if (city) fetchAreaOptions();
   }
 
   function locationClicked(location) {

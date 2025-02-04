@@ -8,19 +8,11 @@ import Loading from "../../components/Loading/Loading";
 import { toast } from "react-toastify";
 import { post } from "../../utils/api";
 import { statusEnum } from "../../utils/const";
+import { fetchLookupData } from "../../utils/fetchLookup";
 
-const bankOptions = [
-  { value: "", label: "Bank" },
-  { value: 1, label: "Capital Bank" },
-  { value: 2, label: "Blink" },
-];
+const bankFirstValue = { value: "", label: "Bank" };
 
-const statusOptions = [
-  { value: "", label: "Status" },
-  { value: "option1", label: "Option 1" },
-  { value: "option2", label: "Option 2" },
-  { value: "option3", label: "Option 3" },
-];
+const statusFirstValue = { value: "", label: "Status" };
 
 const tableHeaders = [
   { label: "Code", key: "code" },
@@ -44,6 +36,8 @@ function Tickets() {
   });
   const [loading, setLoading] = useState(false);
   const [isInitialMount, setIsInitialMount] = useState(false);
+  const [bankOptions, setBankOptions] = useState([bankFirstValue]);
+  const [statusOptions, setStatusOptions] = useState([statusFirstValue]);
 
   useEffect(() => {
     if (isInitialMount) {
@@ -62,6 +56,8 @@ function Tickets() {
 
   useEffect(() => {
     fetchPaginatedData(1);
+    fetchBankOptions();
+    fetchStatusesOptions();
     setIsInitialMount(true);
   }, []);
 
@@ -74,9 +70,9 @@ function Tickets() {
 
     const payload = { pageNumber };
     if (phoneNumber) payload.phoneNumber = phoneNumber;
-    if (bank) payload.bank = parseInt(bank);
-    if (status) payload.status = status;
-    console.log(payload);
+    if (bank) payload.bank = +bank;
+    if (status) payload.status = +status;
+
     try {
       const res = await post("/ticket/search", payload);
       if (res.status.isSuccess) {
@@ -111,6 +107,20 @@ function Tickets() {
       setLoading(false);
     }
   };
+
+  async function fetchBankOptions() {
+    const data = await fetchLookupData("/banks", bankFirstValue, "banks");
+    setBankOptions(data);
+  }
+
+  async function fetchStatusesOptions() {
+    const data = await fetchLookupData(
+      "/ticket/statuses",
+      statusFirstValue,
+      "statuses"
+    );
+    setStatusOptions(data);
+  }
 
   return (
     <div className="page-container">

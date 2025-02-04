@@ -9,20 +9,6 @@ import Loading from "../../components/Loading/Loading";
 import { post } from "../../utils/api";
 import { toast } from "react-toastify";
 
-const areaOptions = [
-  { value: "", label: "Area" },
-  { value: "option1", label: "Option 1" },
-  { value: "option2", label: "Option 2" },
-  { value: "option3", label: "Option 3" },
-];
-
-const cityOptions = [
-  { value: "", label: "City" },
-  { value: "option1", label: "Option 1" },
-  { value: "option2", label: "Option 2" },
-  { value: "option3", label: "Option 3" },
-];
-
 const tableHeaders = [
   { label: "Name", key: "name" },
   { label: "Phone Number", key: "phoneNumber" },
@@ -46,6 +32,18 @@ function RepairShops() {
   });
   const [loading, setLoading] = useState(false);
   const [isInitialMount, setIsInitialMount] = useState(false);
+  const [cityOptions, setCityOptions] = useState([
+    { value: "", label: "City" },
+    { value: "option1", label: "Option 1" },
+    { value: "option2", label: "Option 2" },
+    { value: "option3", label: "Option 3" },
+  ]);
+  const [areaOptions, setAreaOptions] = useState([
+    { value: "", label: "Area" },
+    { value: "option1", label: "Option 1" },
+    { value: "option2", label: "Option 2" },
+    { value: "option3", label: "Option 3" },
+  ]);
 
   useEffect(() => {
     if (isInitialMount) {
@@ -64,6 +62,8 @@ function RepairShops() {
 
   useEffect(() => {
     fetchPaginatedData(1);
+    fetchCityOptions();
+    fetchAreaOptions();
     setIsInitialMount(true);
   }, []);
 
@@ -114,6 +114,32 @@ function RepairShops() {
     fetchData(name, phoneNumber, area, city, pageNumber);
   }
 
+  async function fetchCityOptions() {
+    const res = await post("/cities");
+    if (res.status.isSuccess) {
+      const options = res.data.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+      setCityOptions(options);
+    } else {
+      toast.error(res.status.message || "Something Went Wrong");
+    }
+  }
+
+  async function fetchAreaOptions() {
+    const res = await post("/areas");
+    if (res.status.isSuccess) {
+      const options = res.data.map((item) => ({
+        value: item.id,
+        label: item.name,
+      }));
+      setAreaOptions(options);
+    } else {
+      toast.error(res.status.message || "Something Went Wrong");
+    }
+  }
+
   function locationClicked(location) {
     console.log("location clicked", location);
     const url = `https://www.google.com/maps?q=${location}`;
@@ -135,14 +161,14 @@ function RepairShops() {
         </div>
         <div className="mr-4 w-1/5">
           <Select
-            options={areaOptions}
-            onChange={(e) => setArea(e.target.value)}
+            options={cityOptions}
+            onChange={(e) => setCity(e.target.value)}
           />
         </div>
         <div className="mr-4 w-1/5">
           <Select
-            options={cityOptions}
-            onChange={(e) => setCity(e.target.value)}
+            options={areaOptions}
+            onChange={(e) => setArea(e.target.value)}
           />
         </div>
         {loading && (

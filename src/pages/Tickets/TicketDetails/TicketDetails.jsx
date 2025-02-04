@@ -58,7 +58,7 @@ function TicketDetails() {
 
   return (
     <div className="page-container">
-      <h1 className="page-header">Ticket {loadingComponent}</h1>
+      <h1 className="page-header flex">Ticket {loadingComponent}</h1>
 
       <div className="box-container">
         <div className="box-container-header">

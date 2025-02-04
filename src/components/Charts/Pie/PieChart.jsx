@@ -9,9 +9,8 @@ function PieChart() {
       chart: {
         type: "donut",
       },
-      labels: ["Bank A", "Bank B"],
+      labels: ["Blink", "Capital Bank"],
       dataLabels: {
-        // enabled: false,
         formatter: (val, opts) => opts.w.config.series[opts.seriesIndex],
       },
       responsive: [

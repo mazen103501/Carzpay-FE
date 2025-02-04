@@ -16,7 +16,7 @@ function RepairShopDetails() {
   const [shopDetails, setShopDetails] = useState({});
   const [payments, setPayments] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState(paidEnum.paid);
 
   useEffect(() => {
     fetchShopDetails();
@@ -157,7 +157,7 @@ function RepairShopDetails() {
         </div>
         <div className="p-8">
           <div>
-            <button
+            {/* <button
               className={`font-semibold  px-9 py-2 rounded-xl mr-4 ${
                 activeButton === null
                   ? "text-white bg-primary"
@@ -166,7 +166,7 @@ function RepairShopDetails() {
               onClick={() => setActiveButton(null)}
             >
               All
-            </button>
+            </button> */}
             <button
               className={`font-semibold  px-9 py-2 rounded-xl mr-4 ${
                 activeButton === paidEnum.paid

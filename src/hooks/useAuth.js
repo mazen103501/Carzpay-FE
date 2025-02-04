@@ -22,7 +22,7 @@ export const useAuth = () => {
       const res = await post("/login", { email, password });
       console.log(res);
       if (res.success) {
-        setAuthToken(res.data.token); // Assuming the token is in the response data
+        setAuthToken(res.data.token);
         navigate("/dashboard");
       } else {
         toast.error(`${res.message}`);

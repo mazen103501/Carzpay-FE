@@ -2,7 +2,8 @@ import axios from "axios";
 
 // Create an axios instance
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL:
+    import.meta.env.VITE_API_URL || "https://dashboard-api.carz-pay.com/api",
   headers: {
     "Content-Type": "application/json",
   },

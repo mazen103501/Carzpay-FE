@@ -5,11 +5,15 @@ import { useNavigate } from "react-router-dom";
 import Loading from "../../components/Loading/Loading";
 import { post } from "../../utils/api";
 import { toast } from "react-toastify";
+import { formatDateTime } from "../../utils/date";
+import InfoIcon from "../../../public/info.svg";
 
 const tableHeaders = [
   { label: "Name", key: "name" },
   { label: "Phone Number", key: "phoneNumber" },
+  { label: "Email", key: "email" },
   { label: "Register Date", key: "registerDate" },
+  { label: "Actions", key: "actions" },
 ];
 
 function Users() {
@@ -50,32 +54,16 @@ function Users() {
     if (phoneNumber) payload.phoneNumber = phoneNumber;
 
     try {
-      // const res = await post("/user/search", payload);
-      const res = {
-        status: { isSuccess: true, message: "Success" },
-        pagination: { pageSize: 15, totalPages: 3 },
-        data: {
-          users: [
-            {
-              id: 1,
-              name: "John Doe",
-              phoneNumber: "1234567890",
-              createdAt: "2023-01-01T12:00:00Z",
-            },
-            {
-              id: 2,
-              name: "Jane Smith",
-              phoneNumber: "0987654321",
-              createdAt: "2023-02-01T12:00:00Z",
-            },
-            // Add more dummy users as needed
-          ],
-        },
-      };
+      const res = await post("/mobile-users/search", payload);
       if (res.status.isSuccess) {
         const pagination = res.pagination;
         const tableData = res.data.users.map((item) => {
-          item.registerDate = item.createdAt || "01-01-2025";
+          item.registerDate =
+            (item.registerDate && formatDateTime(item.registerDate)) || "";
+          item.actions = {
+            icon: InfoIcon,
+            onClick: () => navigate(`/users/${item.id}`),
+          };
           return item;
         });
         setTablePagination({

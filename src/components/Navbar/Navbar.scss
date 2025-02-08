@@ -71,7 +71,10 @@
   background-color: rgba(5, 122, 255, 0.2);
   color: theme("colors.primary");
   border-radius: 8px;
-  svg path {
+  svg path:not(.no-fill) {
     fill: theme("colors.primary");
+  }
+  .strock-fill {
+    stroke: theme("colors.primary");
   }
 }

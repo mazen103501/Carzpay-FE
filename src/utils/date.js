@@ -1,5 +1,9 @@
 export const formatDateTime = (dateTimeString) => {
+  if (!dateTimeString) return ""; // Return empty string if null or undefined
+
   const date = new Date(dateTimeString);
+  if (isNaN(date.getTime())) return ""; // Handle invalid date
+
   return date
     .toLocaleString("en-GB", {
       day: "2-digit",

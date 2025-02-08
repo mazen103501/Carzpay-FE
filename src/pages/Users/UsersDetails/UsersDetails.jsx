@@ -34,15 +34,16 @@ function UsersDetails() {
       const res = await get(`/mobile-users/${userId}`);
       if (res.status.isSuccess) {
         const data = res.data.user;
-        const tickets = data.tickets.map((item) => {
-          item.requestDate = formatDateTime(item.requestDate);
-          item.status = statusEnum[item.status];
-          item.actions = {
+        const tickets = data.tickets?.map((item) => ({
+          ...item,
+          requestDate: formatDateTime(item.requestDate),
+          status: statusEnum[item.status],
+          actions: {
             icon: InfoIcon,
             onClick: () => navigate(`/tickets/${item.id}`),
-          };
-          return item;
-        });
+          },
+        })) ?? [];
+        
         delete data.tickets;
         setUserDetails(data);
         setTickets(tickets);
@@ -98,8 +99,8 @@ function UsersDetails() {
           <div className="w-1/5 min-w-[220px]">
             <Input
               placeholder="Date of Birth"
-              label="Date of Birth"
-              value={formatDateTime(userDetails.dateOfBirth)}
+               label="Date of Birth"
+              value={formatDateTime(userDetails?.dateOfBirth)}
               disabled={true}
             ></Input>
           </div>

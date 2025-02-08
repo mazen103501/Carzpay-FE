@@ -109,6 +109,14 @@ function TicketDetails() {
               disabled={true}
             ></Input>
           </div>
+          <div className="w-1/5 min-w-[220px]">
+            <Input
+              placeholder="Repair Amount"
+              label="Repair Amount"
+              value={ticketDetails?.repairAmount}
+              disabled={true}
+            ></Input>
+          </div>
         </div>
         <div className="p-5 flex flex-wrap gap-5">
           <div className="w-1/5 min-w-[220px]">

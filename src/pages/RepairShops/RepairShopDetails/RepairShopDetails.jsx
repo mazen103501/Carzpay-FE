@@ -6,7 +6,7 @@ import { get } from "../../../utils/api";
 import { toast } from "react-toastify";
 import {
   paidEnum,
-  paymentsHeaders,
+  RepairShopDetailsPaymentsHeaders,
   paymentsTableObj,
 } from "../../../utils/const";
 import Loading from "../../../components/Loading/Loading";
@@ -36,7 +36,7 @@ function RepairShopDetails() {
         const payments = data.payments.map((payment) => ({
           ...payment,
           status: paymentsTableObj[payment.status],
-          dueDate: formatDateTime(payment.payoutDate) || "01-01-2025",
+          payoutDate: formatDateTime(payment.payoutDate) || "01-01-2025",
         }));
         delete data.payments;
         setShopDetails(data);
@@ -145,7 +145,9 @@ function RepairShopDetails() {
             <Input
               placeholder="Location"
               label="Lat/Long"
-              value={shopDetails.location}
+              value={`${shopDetails.latitude?.toFixed(6) || "0.000000"}, ${
+                shopDetails.longitude?.toFixed(6) || "0.000000"
+              }`}
               disabled={true}
             ></Input>
           </div>
@@ -191,7 +193,7 @@ function RepairShopDetails() {
           </div>
           <div className="mt-8">
             <Table
-              headers={paymentsHeaders}
+              headers={RepairShopDetailsPaymentsHeaders}
               data={filteredPayments}
               hiddenPagination={true}
             ></Table>

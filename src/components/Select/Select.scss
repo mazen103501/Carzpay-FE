@@ -7,9 +7,9 @@
     font-size: 12px;
     font-weight: normal;
     padding: 10px 12px;
-    color: #7e7e7e;
-    background-color: #f9fbff;
-    border: 1px solid white;
+    color: theme("colors.inputsColor");
+    background-color: theme("colors.lightBlue");
+    border: 1px solid theme("colors.lightGray");
     border-radius: 10px;
     outline: none;
     cursor: pointer;
@@ -19,15 +19,15 @@
     }
 
     option {
-      background-color: #f9fbff;
-      color: #7e7e7e;
+      background-color: theme("colors.lightBlue");
+      color: theme("colors.inputsColor");
       padding: 10px;
       font-size: 12px;
-      border-radius: 10px; /* Change border-radius */
-      background-color: #f9fbff; /* Change background color */
+      border-radius: 10px;
+      background-color: theme("colors.lightBlue");
 
       &:hover {
-        background-color: #b2ebf2; /* Change hover background color */
+        background-color: #b2ebf2;
       }
     }
   }

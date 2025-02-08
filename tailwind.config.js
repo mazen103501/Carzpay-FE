@@ -6,6 +6,9 @@ export default {
       colors: {
         primary: "#057AFF",
         darkGray: "#202224",
+        lightBlue: "#f9fbff",
+        inputsColor: "#4B4B4B",
+        lightGray: "#d1d5db",
       },
       fontFamily: {
         sans: ["Poppins", "sans-serif"],

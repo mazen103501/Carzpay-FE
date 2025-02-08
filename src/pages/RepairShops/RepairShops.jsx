@@ -85,11 +85,11 @@ function RepairShops() {
       if (res.status.isSuccess) {
         const pagination = res.pagination;
         const tableData = res.data.repairShops.map((item) => {
-          const location = item.location;
+          const location = `${item.latitude}, ${item.longitude}`;
           item.area = item.area.name;
           item.city = item.city.name;
           item.location = {
-            data: item.location,
+            data: `${item.latitude}, ${item.longitude}`,
             icon: LocationIcon,
             onClick: () => locationClicked(location),
           };
@@ -145,9 +145,9 @@ function RepairShops() {
     <div className="page-container">
       <h1 className="page-header">Repair Shops</h1>
       <div className="box-container overflow-x-auto px-6 pt-[30px] pb-10 flex flex-wrap ">
-        <div className="mr-4 w-1/5">
+        {/* <div className="mr-4 w-1/5">
           <Input placeholder="Name" onChange={(e) => setName(e.target.value)} />
-        </div>
+        </div> */}
         <div className="mr-4 w-1/5">
           <Input
             placeholder="Phone Number"

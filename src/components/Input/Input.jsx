@@ -17,7 +17,7 @@ function Input({
         </label>
       )}
       <input
-        className={`w-full h-[38px] text-xs font-normal px-3 py-[10px] text-[#7E7E7E] bg-[#F9FBFF] rounded-[10px] border-[1px] border-white focus:outline-none focus:border-primary focus:border-[1px] ${cssClasses}`}
+        className={`w-full h-[38px] text-xs font-medium px-3 py-[10px] text-inputsColor bg-lightBlue rounded-[10px] border-[1px] border-lightGray focus:outline-none focus:border-primary focus:border-[1px] ${cssClasses}`}
         type={type}
         placeholder={placeholder}
         value={value}

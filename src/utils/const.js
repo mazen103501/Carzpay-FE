@@ -9,14 +9,20 @@ export const paymentsHeaders = [
   { label: "Status", key: "status" },
 ];
 
+export const RepairShopDetailsPaymentsHeaders = [
+  { label: "Amount", key: "amount" },
+  { label: "Payout Date", key: "payoutDate" },
+  { label: "Status", key: "status" },
+];
+
 export const paymentsTableObj = [
-  {
-    data: paidEnum.paid,
-    styles: "rounded-[4.5px] max-w-[110px] status approved",
-  },
   {
     data: paidEnum.unPaid,
     styles: "rounded-[4.5px] max-w-[110px] status rejected",
+  },
+  {
+    data: paidEnum.paid,
+    styles: "rounded-[4.5px] max-w-[110px] status approved",
   },
 ];
 

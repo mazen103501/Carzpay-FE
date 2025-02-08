@@ -1,14 +1,8 @@
 import React from "react";
 import "./ProgressStepper.scss";
+import { statusEnum } from "../../utils/const";
 
-const stepsWithoutReject = [
-  "Initiated",
-  "Approved",
-  "In Repair",
-  "Repaired",
-  "Pending Installments",
-  "Settled",
-];
+const stepsWithoutReject = statusEnum.filter((status) => status !== "Reject");
 function ProgressStepper({ steps, currentStep }) {
   const activeStep = stepsWithoutReject.indexOf(currentStep);
   return (

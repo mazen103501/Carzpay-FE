@@ -37,7 +37,10 @@ function UsersDetails() {
         const tickets = data.tickets?.map((item) => ({
           ...item,
           requestDate: formatDateTime(item.requestDate),
-          status: statusEnum[item.status],
+          status: {
+            data: statusEnum[item.status],
+            styles: "status w-fit whitespace-nowrap !max-w-none approved",
+          },
           actions: {
             icon: InfoIcon,
             onClick: () => navigate(`/tickets/${item.id}`),

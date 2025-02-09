@@ -32,11 +32,11 @@ function TicketDetails() {
         const data = {
           ...res.data.ticket,
         };
-        const payments = data.payments.map((payment) => ({
+        const payments = data.payments?.map((payment) => ({
           ...payment,
           status: paymentsTableObj[payment.status],
           dueDate: formatDateTime(payment.dueDate),
-        }));
+        })) || [];        
         delete data.payments;
         setTicketDetails(data);
         setPayments(payments);
